@@ -15,20 +15,23 @@ RUN bash -c "if [ ${INSTALL_DEV} == 'true' ] ; \
 FROM python:3.10.2-slim-buster
 
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONPATH /home/app/backend
+
+ENV PYTHONPATH /usr/src/ciplay-task
 
 # copy from first layer pip wheels dependencies
-COPY --from=builder /app/wheels /wheels
+ARG WHEELS_PATH=/usr/local/bin/wheels/
+COPY --from=builder /app/wheels/* ${WHEELS_PATH}
 
 # install dependencies
 RUN apt update && \
     apt install -y netcat && \
-    pip install --no-cache  /wheels/* && \
+    pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache ${WHEELS_PATH}*  && \
     # owner will be changed at the finish builing image 
-    addgroup --system --gid 1000 app &&\
-    adduser --system --gid 1000 --uid 1000 app
+    addgroup --system --gid 1000 ciplayapp &&\
+    adduser --system --gid 1000 --uid 1000 ciplayapp
 
-WORKDIR /home/app/backend
+WORKDIR ${PYTHONPATH}
 
 # copy project
 COPY . .
@@ -37,5 +40,5 @@ COPY . .
 RUN chown -R 1000:1000 . && chmod +x ./scripts/*.sh
 
 # change owner
-USER app
+USER ciplayapp
 

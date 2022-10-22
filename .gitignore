@@ -2,3 +2,4 @@ env
 venv
 .idea
 .env
+docker-stack.yaml

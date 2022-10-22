@@ -4,20 +4,21 @@ services:
     ports:
       - 5432:5432
   backend:
-    command: ./scripts/start.sh
+    command: ./scripts/start-reload.sh
     ports:
-      - 8000:8000
+      - 8000
     volumes:
-      - ./backend/app:/app
+      - ./backend/app:/usr/src/app
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
-
+    deploy:
+      replicas: 1
   proxy:
     ports:
-      - "80:80"
+      - "8000:80"
       - "8090:8080"
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
@@ -41,3 +42,8 @@ services:
       - traefik.enable=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
       - traefik.http.services.${STACK_NAME?Variable not set}-traefik-public.loadbalancer.server.port=80
+
+networks:
+  traefik-public:
+    # For local dev, don't expect an external Traefik network
+    external: false

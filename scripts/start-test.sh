@@ -12,5 +12,5 @@ fi
 
 docker compose build
 docker compose up -d
-docker compose exec -T backend bash /home/app/backend/scripts/format.sh
-docker compose exec -T backend bash /home/app/backend/scripts/test.sh
+docker compose exec -T backend bash /usr/src/ciplay-task/scripts/format.sh
+docker compose exec -T backend bash /usr/src/ciplay-task/scripts/test.sh
