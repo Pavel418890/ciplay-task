@@ -21,7 +21,7 @@ $ docker compose up -d
 Команда включает в себя:
 - Cборка и запуск докер контейнеров
 - Создание таблицы, если не была создана ранее 
-- Запуск сервиса
+- Запуск сервиса 1 сервиса
 
 
 <a id="tests">Запуск тестов</a>
@@ -39,7 +39,17 @@ $ <path_to_project>/scripts/start-test.sh
 - Создание таблицы, если не была создана ранее 
 - Запуск тестов
 
+<a id="prod">Запуск в продакшен</a>
+```shell
+$ docker compose config > docker-stack.yaml
+```
+* Далее необходимо отредактировать сгенерированный файл `docker-stack.yaml`
+* Удалить ключ `name` и добавить вместо него `version="3.9"`
+* Привести все `public_port` к типу int
+* $ pip install docker-auto-labels
+* docker-auto-labels docker-stack.yaml
+* docker stack deploy -c docker-stack.yaml `${STACK_NAME?Variable not exists}`
+
 
 <a id="docs">Документация</a>
-
-http://localhost:8000/docs
+https://natours-club.site/docs
