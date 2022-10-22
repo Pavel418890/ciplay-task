@@ -8,12 +8,16 @@ services:
     ports:
       - 8000
     volumes:
-      - ./backend/app:/usr/src/app
+      - ./backend/:/usr/src/ciplay-task/
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
+    build:
+      context: ./backend
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
     deploy:
       replicas: 1
   proxy:
@@ -47,3 +51,4 @@ networks:
   traefik-public:
     # For local dev, don't expect an external Traefik network
     external: false
+
