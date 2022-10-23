@@ -11,6 +11,6 @@ if [ $(uname -s) = "Linux" ]; then
 fi
 
 docker compose build
-docker compose up -d
-docker compose exec -T backend bash /usr/src/ciplay-task/scripts/format.sh
-docker compose exec -T backend bash /usr/src/ciplay-task/scripts/test.sh
+docker compose up -d 
+docker compose exec -T backend sh /usr/src/ciplay-task/scripts/format.sh
+docker compose exec -T backend sh /usr/src/ciplay-task/scripts/test.sh

@@ -16,7 +16,7 @@
 $ cat .env.example > .env
 # Заполнить .env вашими данными
 
-$ docker compose up -d 
+$ docker compose up -d
 ```
 Команда включает в себя:
 - Cборка и запуск докер контейнеров
@@ -36,7 +36,7 @@ $ <path_to_project>/scripts/start-test.sh
 - Сборка и запуск докер контейнеров
 - Форматирование кода (Опционально)
 - Удаление скомпилированных python файлов (`__pycache__`)
-- Создание таблицы, если не была создана ранее 
+- Создание таблицы, если не была создана ранее
 - Запуск тестов
 
 <a id="prod">Запуск в продакшен</a>
@@ -50,6 +50,6 @@ $ docker compose config > docker-stack.yaml
 * docker-auto-labels docker-stack.yaml
 * docker stack deploy -c docker-stack.yaml `${STACK_NAME?Variable not exists}`
 
-
 <a id="docs">Документация</a>
-https://natours-club.site/docs
+http://natours-club.site/docs
+

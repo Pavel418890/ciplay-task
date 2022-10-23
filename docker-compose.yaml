@@ -1,6 +1,9 @@
 version: "3.8"
 services:
   proxy:
+    ports:
+    - 80:80
+    - 443:443
     image: traefik:v2.2
     networks:
       - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
@@ -58,16 +61,19 @@ services:
         # to disable www redirection remove the section: ${STACK_NAME?Variable not set}-www-redirect,
         - traefik.http.routers.${STACK_NAME?Variable not set}-proxy-http.middlewares=${STACK_NAME?Variable not set}-www-redirect,${STACK_NAME?Variable not set}-https-redirect
 
-
   db:
-    image: postgres:14
+    image: postgres:14.3-alpine
     volumes:
       - pg-data:/var/lib/postgresql/data
     env_file:
       - .env
-          
+    deploy:
+      placement:
+        constraints:
+        - node.labels.${STACK_NAME?Variable not set}.pg-data == true
+  
   backend:
-    image: ciplay-task-backend:latest
+    image: plots418890/ciplay-task-backend:latest
     depends_on:
       - db
     env_file:
@@ -76,8 +82,14 @@ services:
       context: ./backend
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+    command: ./scripts/start.sh
     deploy:
-            replicas: 3    
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+        - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+        - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
+
 volumes:
   pg-data:
 
@@ -85,3 +97,4 @@ networks:
   traefik-public:
     # Allow setting it to false for testing
     external: ${TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL-true}
+
