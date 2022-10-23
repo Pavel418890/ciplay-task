@@ -10,6 +10,7 @@ if [ $(uname -s) = "Linux" ]; then
     sudo find . -type d -name __pycache__ -exec rm -r {} \+
 fi
 
-docker compose up -d --build
+docker compose build
+docker compose up -d 
 docker compose exec -T backend sh /usr/src/ciplay-task/scripts/format.sh
 docker compose exec -T backend sh /usr/src/ciplay-task/scripts/test.sh

@@ -75,6 +75,7 @@ services:
       context: ./backend
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+    command: ./scripts/start.sh
     deploy:
       labels:
         - traefik.enable=true

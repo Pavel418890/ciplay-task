@@ -26,7 +26,7 @@ RUN apk update && \
     pip install --upgrade pip setuptools wheel && \
     pip install --no-cache ${WHEELS_PATH}* && \
     # owner will be changed at the finish builing image 
-    addgroup -S ciplayapp && adduser -S ciplayapp -G ciplayapp
+    addgroup -g 1000 -S ciplayapp && adduser -S --uid 1000 ciplayapp -G ciplayapp
 
 WORKDIR ${PYTHONPATH}
 
@@ -35,8 +35,6 @@ COPY . .
 
 # grant privilege
 RUN chown -R 1000:1000 . && chmod +x ./scripts/*.sh
-
 # change owner
 USER ciplayapp
-
 
