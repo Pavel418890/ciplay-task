@@ -28,8 +28,8 @@ class GetStats(BaseModel):
 
     @validator("order_by")
     def check_order_by(cls, v: str) -> str:
-        if v not in ("date", "cost", "views", "clicks"):
-            raise ValueError("Allowed fields (date, views, clicks, cost)")
+        if v not in ("date", "cost", "views", "clicks", "cpm", "cpc"):
+            raise ValueError("Allowed fields (date, views, clicks, cost, cpm, cpc)")
         return v
 
     @validator("from_date", "to_date")
