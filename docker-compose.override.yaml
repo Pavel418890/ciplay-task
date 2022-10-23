@@ -14,6 +14,10 @@ services:
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=80
+    build:
+      context: ./backend
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
     deploy:
       replicas: 1
   proxy:
